@@ -38,6 +38,7 @@ for func, keys in _FUNCTION_MAPPING_TEMP.items():
 
 def process_text(message, reply_token):
     text = message["text"]
+    text = text.strip()
     text_split = text.split(" ")
     func = _FUNCTION_MAPPING.get(text_split[0])
     if func:

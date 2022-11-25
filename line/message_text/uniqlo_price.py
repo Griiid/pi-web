@@ -12,8 +12,8 @@ from utils.print import print_json
 _FLEX_START = FLEX_START.format(title="Uniqlo 搜尋", title_color="#FFFFFF")
 _FLEX_END = FLEX_END.format(header_background="#FD0000")
 
-_FLEX_CONTENT_PRICE = '{{"type":"box","layout":"vertical","contents":[{{"type":"box","layout":"baseline","contents":[{{"type":"text","text":"{product_number}","size":"lg","weight":"bold"}},{{"type":"text","text":"{sex}","align":"end","color":"#AAAAAA"}}]}},{{"type":"text","text":"{name}","wrap":true}},{{"type":"box","layout":"baseline","contents":[{{"type":"text","text":"價格","flex":1,"color":"#AAAAAA"}},{{"type":"text","text":"${origin_price}","flex":5}}],"spacing":"md"}}],"action":{{"type":"uri","label":"action","uri":"{link}"}}}}'
-_FLEX_CONTENT_PRICE_CHEAP = '{{"type":"box","layout":"vertical","contents":[{{"type":"box","layout":"baseline","contents":[{{"type":"text","text":"{product_number}","size":"lg","weight":"bold"}},{{"type":"text","text":"{sex}","align":"end","color":"#AAAAAA"}}]}},{{"type":"text","text":"{name}","wrap":true}},{{"type":"box","layout":"baseline","contents":[{{"type":"text","text":"特價","flex":1,"color":"#AAAAAA"}},{{"type":"text","text":"${new_prices} 🥳","flex":5,"size":"xl","color":"#EAA000"}}],"spacing":"md"}},{{"type":"box","layout":"baseline","contents":[{{"type":"text","text":"原價","flex":1,"color":"#AAAAAA"}},{{"type":"text","text":"${origin_price}","flex":5,"decoration":"line-through","color":"#CCCCCC"}}],"spacing":"md"}}],"action":{{"type":"uri","label":"action","uri":"{link}"}}}}'
+_FLEX_CONTENT_PRICE = '{{"type":"box","layout":"vertical","contents":[{{"type":"box","layout":"baseline","contents":[{{"type":"text","text":"{product_number}","size":"lg","weight":"bold"}},{{"type":"text","text":"{sex}","align":"end","color":"#AAAAAA"}}]}},{{"type":"text","text":"{name}","wrap":true}},{{"type":"box","layout":"horizontal","contents":[{{"type":"box","layout":"vertical","contents":[{{"type":"box","layout":"baseline","contents":[{{"type":"text","text":"價格","adjustMode":"shrink-to-fit","flex":2,"color":"#aaaaaa"}},{{"type":"text","text":"${origin_price}","flex":5,"color":"#CCCCCC"}}],"spacing":"md"}}],"flex":6}},{{"type":"image","url":"{main_picture}","flex":4,"align":"center"}}]}}],"action":{{"type":"uri","label":"action","uri":"{link}"}}}}'
+_FLEX_CONTENT_PRICE_CHEAP = '{{"type":"box","layout":"vertical","contents":[{{"type":"box","layout":"baseline","contents":[{{"type":"text","text":"{product_number}","size":"lg","weight":"bold"}},{{"type":"text","text":"{sex}","align":"end","color":"#AAAAAA"}}]}},{{"type":"text","text":"{name}","wrap":true}},{{"type":"box","layout":"horizontal","contents":[{{"type":"box","layout":"vertical","contents":[{{"type":"box","layout":"baseline","contents":[{{"type":"text","text":"特價","adjustMode":"shrink-to-fit","flex":2,"color":"#aaaaaa"}},{{"type":"text","text":"${new_prices} 🥳","flex":5,"size":"xl","color":"#EAA000"}}],"spacing":"md"}},{{"type":"box","layout":"baseline","contents":[{{"type":"text","text":"原價","adjustMode":"shrink-to-fit","flex":2,"color":"#aaaaaa"}},{{"type":"text","text":"${origin_price}","flex":5,"decoration":"line-through","color":"#CCCCCC"}}],"spacing":"md"}}],"flex":6}},{{"type":"image","url":"{main_picture}","flex":4,"align":"center"}}]}}],"action":{{"type":"uri","label":"action","uri":"{link}"}}}}'
 
 _SEARCH_URL = 'https://d.uniqlo.com/tw/p/hmall-sc-service/search/searchWithDescriptionAndConditions/zh_TW'
 
@@ -52,7 +52,10 @@ def uniqlo_price_kernel(product_number):
     name = resp_data['name']
     origin_price = int(resp_data['originPrice'])
     prices = resp_data.get('prices', None)
+    prices = [int(p) for p in prices]
     product_code = resp_data['productCode']
+    main_picture = resp_data['mainPic']
+    main_picture = f'https://www.uniqlo.com/tw{main_picture}'
     link = f'https://www.uniqlo.com/tw/zh_TW/product-detail.html?productCode={product_code}'
 
     result = {
@@ -60,6 +63,7 @@ def uniqlo_price_kernel(product_number):
         "name": name,
         "sex": sex,
         "origin_price": origin_price,
+        "main_picture": main_picture,
         "link": link,
     }
     if isinstance(prices, list):
