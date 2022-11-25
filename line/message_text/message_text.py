@@ -1,8 +1,30 @@
+from ..message_api import (
+    line_message_object_text,
+    send_reply_message,
+)
 from .exchange_rate import exchange_rate
 from .uniqlo_price import uniqlo_price
 
+
+def command_explain(params, reply_token):
+    for func in _FUNCTION_MAPPING_TEMP.keys():
+        if func is command_explain:
+            continue
+        print(func.__doc__)
+
+    message = "支援的指令如下，[ ] 裡面的是選擇性輸入\n----\n"
+    message += "\n".join([
+        func.__doc__
+        for func in _FUNCTION_MAPPING_TEMP.keys() if func is not command_explain and func.__doc__ is not None
+    ])
+    message = line_message_object_text(message)
+
+    send_reply_message(reply_token, [message])
+
+
 _FUNCTION_MAPPING = {}
 _FUNCTION_MAPPING_TEMP = {
+    command_explain: ["help", "?"],
     exchange_rate: ["匯率"],
     uniqlo_price: ["UQ"],
 }
