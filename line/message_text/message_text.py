@@ -1,4 +1,5 @@
 from .exchange_rate import exchange_rate
+from .uniqlo_price import uniqlo_price
 from utils.print import (
     print_error,
     print_item,
@@ -7,6 +8,7 @@ from utils.print import (
 
 FUNCTION_MAPPING = {
     "匯率": exchange_rate,
+    "UQ": uniqlo_price,
 }
 
 
