@@ -1,11 +1,9 @@
+from .exchange_rate import exchange_rate
 from utils.print import (
     print_error,
     print_item,
     print_json,
 )
-
-from .exchange_rate import exchange_rate
-
 
 FUNCTION_MAPPING = {
     "匯率": exchange_rate,
@@ -14,6 +12,7 @@ FUNCTION_MAPPING = {
 
 def process_text(message, reply_token):
     text = message["text"]
-    func = FUNCTION_MAPPING.get(text)
+    text_split = text.split(" ")
+    func = FUNCTION_MAPPING.get(text_split[0])
     if func:
-        func(text, reply_token)
+        func(text_split[1:], reply_token)

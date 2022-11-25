@@ -7,19 +7,19 @@ import threading
 from flask import (
     Blueprint,
     Response,
-    current_app,
     request,
 )
 
+from .config import (
+    ACCESS_TOKEN,
+    CHANNEL_SECRET,
+)
 from .message_text.message_text import process_text
 from exceptions import ForbiddenError
 from utils import status
 from utils.print import print_json
 
 line = Blueprint("line", __name__, url_prefix="/line")
-
-CHANNEL_SECRET = current_app.config["CHANNEL_SECRET"]
-ACCESS_TOKEN = current_app.config["ACCESS_TOKEN"]
 
 
 class MessageHandler:

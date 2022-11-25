@@ -1,3 +1,4 @@
 Flask==2.2.2
+pandas==1.5.2
 python-dotenv==22.3.1
 requests==2.28.1
