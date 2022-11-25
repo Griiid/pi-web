@@ -4,6 +4,7 @@ from ..message_api import (
 )
 from .exchange_rate import exchange_rate
 from .uniqlo_price import uniqlo_price
+from .direct_reply import direct_reply
 
 
 def command_explain(params, reply_token):
@@ -27,6 +28,7 @@ _FUNCTION_MAPPING_TEMP = {
     command_explain: ["help", "?"],
     exchange_rate: ["匯率"],
     uniqlo_price: ["UQ"],
+    direct_reply: ["豪豪", "容容"],
 }
 
 for func, keys in _FUNCTION_MAPPING_TEMP.items():
@@ -39,4 +41,4 @@ def process_text(message, reply_token):
     text_split = text.split(" ")
     func = _FUNCTION_MAPPING.get(text_split[0])
     if func:
-        func(text_split[1:], reply_token)
+        func(text_split, reply_token)

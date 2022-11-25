@@ -92,6 +92,8 @@ _FLEX_CONTENT_CURRENCY = '{{"type":"box","layout":"vertical","contents":[{{"type
 
 def exchange_rate(currency_list, reply_token):
     """匯率 [幣別 1] [幣別 2] ..."""
+    currency_list = currency_list[1:]
+
     r = requests.get(_URL_EXCHANGE_RATE)
     if r.status_code != 200:
         print(f'Request failed, status code: {r.status_code}')

@@ -79,6 +79,7 @@ def uniqlo_price_kernel(product_number):
 
 def uniqlo_price(product_number_list, reply_token):
     """UQ 商品編號 1 [商品編號 2] ..."""
+    product_number_list = product_number_list[1:]
     if not product_number_list:
         return
 
