@@ -84,7 +84,7 @@ currency_display_map = {
 }
 
 
-_FLEX_START = FLEX_START.format(title="匯率查詢結果")
+_FLEX_START = FLEX_START.format(title="匯率查詢結果", title_color="#000000")
 _FLEX_END = FLEX_END.format(header_background="#FFFED1")
 
 FLEX_CONTENT_CURRENCY = '{{"type":"box","layout":"vertical","contents":[{{"type":"text","text":"{currency}","size":"lg","weight":"bold","align":"center","margin":"5px"}},{{"type":"box","layout":"horizontal","paddingStart":"30px","contents":[{{"type":"text","text":" ","flex":2,"size":"lg","weight":"bold","decoration":"none","contents":[]}},{{"type":"text","text":"現金","flex":6}},{{"type":"text","text":"即期","flex":6}}]}},{{"type":"box","layout":"horizontal","paddingStart":"30px","contents":[{{"type":"text","text":"買","flex":2,"color":"#EB4726"}},{{"type":"text","text":"{cash_buy}","flex":6,"color":"#EB4726"}},{{"type":"text","text":"{spot_buy}","flex":6,"color":"#EB4726"}}]}},{{"type":"box","layout":"horizontal","paddingStart":"30px","contents":[{{"type":"text","text":"賣","flex":2,"color":"#43952A"}},{{"type":"text","text":"{cash_sell}","flex":6,"color":"#43952A"}},{{"type":"text","text":"{spot_sell}","flex":6,"color":"#43952A"}}]}}]}}'
