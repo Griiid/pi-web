@@ -12,10 +12,10 @@ from utils.print import print_json
 _FLEX_START = FLEX_START.format(title="Uniqlo 搜尋", title_color="#FFFFFF")
 _FLEX_END = FLEX_END.format(header_background="#FD0000")
 
-FLEX_CONTENT_PRICE = '{{"type":"box","layout":"vertical","contents":[{{"type":"box","layout":"baseline","contents":[{{"type":"text","text":"{product_number}","size":"lg","weight":"bold"}},{{"type":"text","text":"{sex}","align":"end","color":"#AAAAAA"}}]}},{{"type":"text","text":"{name}","wrap":true}},{{"type":"box","layout":"baseline","contents":[{{"type":"text","text":"價格","flex":1,"color":"#aaaaaa"}},{{"type":"text","text":"${origin_price}","flex":5}}],"spacing":"md"}}],"action":{{"type":"uri","label":"action","uri":"{link}"}}}}'
-FLEX_CONTENT_PRICE_CHEAP = '{{"type":"box","layout":"vertical","contents":[{{"type":"box","layout":"baseline","contents":[{{"type":"text","text":"{product_number}","size":"lg","weight":"bold"}},{{"type":"text","text":"{sex}","align":"end","color":"#AAAAAA"}}]}},{{"type":"text","text":"{name}","wrap":true}},{{"type":"box","layout":"baseline","contents":[{{"type":"text","text":"特價","flex":1,"color":"#aaaaaa"}},{{"type":"text","text":"${new_prices} 🥳","flex":5,"size":"xl","color":"#EAA000"}}],"spacing":"md"}},{{"type":"box","layout":"baseline","contents":[{{"type":"text","text":"原價","flex":1,"color":"#aaaaaa"}},{{"type":"text","text":"${origin_price}","flex":5,"decoration":"line-through","color":"#CCCCCC"}}],"spacing":"md"}}],"action":{{"type":"uri","label":"action","uri":"{link}"}}}}'
+_FLEX_CONTENT_PRICE = '{{"type":"box","layout":"vertical","contents":[{{"type":"box","layout":"baseline","contents":[{{"type":"text","text":"{product_number}","size":"lg","weight":"bold"}},{{"type":"text","text":"{sex}","align":"end","color":"#AAAAAA"}}]}},{{"type":"text","text":"{name}","wrap":true}},{{"type":"box","layout":"baseline","contents":[{{"type":"text","text":"價格","flex":1,"color":"#aaaaaa"}},{{"type":"text","text":"${origin_price}","flex":5}}],"spacing":"md"}}],"action":{{"type":"uri","label":"action","uri":"{link}"}}}}'
+_FLEX_CONTENT_PRICE_CHEAP = '{{"type":"box","layout":"vertical","contents":[{{"type":"box","layout":"baseline","contents":[{{"type":"text","text":"{product_number}","size":"lg","weight":"bold"}},{{"type":"text","text":"{sex}","align":"end","color":"#AAAAAA"}}]}},{{"type":"text","text":"{name}","wrap":true}},{{"type":"box","layout":"baseline","contents":[{{"type":"text","text":"特價","flex":1,"color":"#aaaaaa"}},{{"type":"text","text":"${new_prices} 🥳","flex":5,"size":"xl","color":"#EAA000"}}],"spacing":"md"}},{{"type":"box","layout":"baseline","contents":[{{"type":"text","text":"原價","flex":1,"color":"#aaaaaa"}},{{"type":"text","text":"${origin_price}","flex":5,"decoration":"line-through","color":"#CCCCCC"}}],"spacing":"md"}}],"action":{{"type":"uri","label":"action","uri":"{link}"}}}}'
 
-SEARCH_URL = 'https://d.uniqlo.com/tw/p/hmall-sc-service/search/searchWithDescriptionAndConditions/zh_TW'
+_SEARCH_URL = 'https://d.uniqlo.com/tw/p/hmall-sc-service/search/searchWithDescriptionAndConditions/zh_TW'
 
 
 def uniqlo_price_kernel(product_number):
@@ -42,7 +42,7 @@ def uniqlo_price_kernel(product_number):
             "high": 0
         }
     }
-    r = requests.post(SEARCH_URL, headers=headers, json=data)
+    r = requests.post(_SEARCH_URL, headers=headers, json=data)
     if r.status_code != 200:
         return None
 
@@ -86,9 +86,9 @@ def uniqlo_price(product_number_list, reply_token):
     for product_number in product_number_list:
         data = uniqlo_price_kernel(product_number)
         if "new_prices" in data:
-            content_list.append(FLEX_CONTENT_PRICE_CHEAP.format(**data))
+            content_list.append(_FLEX_CONTENT_PRICE_CHEAP.format(**data))
         else:
-            content_list.append(FLEX_CONTENT_PRICE.format(**data))
+            content_list.append(_FLEX_CONTENT_PRICE.format(**data))
 
     if not content_list:
         # TODO: 回傳查無資料

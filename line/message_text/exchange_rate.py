@@ -12,9 +12,9 @@ from ..constants import (
 from ..message_api import send_reply_message
 from utils.print import print_json
 
-URL_EXCHANGE_RATE = "https://rate.bot.com.tw/xrt/flcsv/0/day"
+_URL_EXCHANGE_RATE = "https://rate.bot.com.tw/xrt/flcsv/0/day"
 
-currency_map = {
+_CURRENCY_MAP = {
     "美金": "USD",
     "美元": "USD",
     "美圓": "USD",
@@ -61,7 +61,7 @@ currency_map = {
     "中國": "CNY",
 }
 
-currency_display_map = {
+_CURRENCY_DISPLAY_MAP = {
     "USD": "🇺🇸 美元",
     "HKD": "🇭🇰 港幣",
     "GBP": "🇬🇧 英鎊",
@@ -87,12 +87,12 @@ currency_display_map = {
 _FLEX_START = FLEX_START.format(title="匯率查詢結果", title_color="#000000")
 _FLEX_END = FLEX_END.format(header_background="#FFFED1")
 
-FLEX_CONTENT_CURRENCY = '{{"type":"box","layout":"vertical","contents":[{{"type":"text","text":"{currency}","size":"lg","weight":"bold","align":"center","margin":"5px"}},{{"type":"box","layout":"horizontal","paddingStart":"30px","contents":[{{"type":"text","text":" ","flex":2,"size":"lg","weight":"bold","decoration":"none","contents":[]}},{{"type":"text","text":"現金","flex":6}},{{"type":"text","text":"即期","flex":6}}]}},{{"type":"box","layout":"horizontal","paddingStart":"30px","contents":[{{"type":"text","text":"買","flex":2,"color":"#EB4726"}},{{"type":"text","text":"{cash_buy}","flex":6,"color":"#EB4726"}},{{"type":"text","text":"{spot_buy}","flex":6,"color":"#EB4726"}}]}},{{"type":"box","layout":"horizontal","paddingStart":"30px","contents":[{{"type":"text","text":"賣","flex":2,"color":"#43952A"}},{{"type":"text","text":"{cash_sell}","flex":6,"color":"#43952A"}},{{"type":"text","text":"{spot_sell}","flex":6,"color":"#43952A"}}]}}]}}'
+_FLEX_CONTENT_CURRENCY = '{{"type":"box","layout":"vertical","contents":[{{"type":"text","text":"{currency}","size":"lg","weight":"bold","align":"center","margin":"5px"}},{{"type":"box","layout":"horizontal","paddingStart":"30px","contents":[{{"type":"text","text":" ","flex":2,"size":"lg","weight":"bold","decoration":"none","contents":[]}},{{"type":"text","text":"現金","flex":6}},{{"type":"text","text":"即期","flex":6}}]}},{{"type":"box","layout":"horizontal","paddingStart":"30px","contents":[{{"type":"text","text":"買","flex":2,"color":"#EB4726"}},{{"type":"text","text":"{cash_buy}","flex":6,"color":"#EB4726"}},{{"type":"text","text":"{spot_buy}","flex":6,"color":"#EB4726"}}]}},{{"type":"box","layout":"horizontal","paddingStart":"30px","contents":[{{"type":"text","text":"賣","flex":2,"color":"#43952A"}},{{"type":"text","text":"{cash_sell}","flex":6,"color":"#43952A"}},{{"type":"text","text":"{spot_sell}","flex":6,"color":"#43952A"}}]}}]}}'
 
 
 def exchange_rate(currency_list, reply_token):
     """匯率 [幣別 1] [幣別 2] ..."""
-    r = requests.get(URL_EXCHANGE_RATE)
+    r = requests.get(_URL_EXCHANGE_RATE)
     if r.status_code != 200:
         print(f'Request failed, status code: {r.status_code}')
         return
@@ -105,7 +105,7 @@ def exchange_rate(currency_list, reply_token):
     currency_data_dict = {}
     for data_ in data:
         currency = data_["幣別"]
-        currency_display = currency_display_map[currency]
+        currency_display = _CURRENCY_DISPLAY_MAP[currency]
         currency_data_dict[currency] = {
             "currency": currency_display,
             "cash_buy": data_["現金"],
@@ -115,7 +115,7 @@ def exchange_rate(currency_list, reply_token):
         }
 
     if currency_list:
-        currency_list = list(filter(lambda c: c is not None, map(lambda c: currency_map.get(c, None), currency_list)))
+        currency_list = list(filter(lambda c: c is not None, map(lambda c: _CURRENCY_MAP.get(c, None), currency_list)))
     else:
         currency_list = currency_data_dict.keys()
 
@@ -125,7 +125,7 @@ def exchange_rate(currency_list, reply_token):
         if currency_data is None:
             continue
 
-        content_list.append(FLEX_CONTENT_CURRENCY.format(**currency_data))
+        content_list.append(_FLEX_CONTENT_CURRENCY.format(**currency_data))
 
     if not content_list:
         # TODO: 回傳查無資料
