@@ -1,4 +1,5 @@
 import json
+
 import requests
 
 from ..constants import (
@@ -26,7 +27,7 @@ def uniqlo_price_kernel(product_number):
     data = {
         "pageInfo": {
             "page": 1,
-            "pageSize": 1
+            "pageSize": 24,
         },
         "description": product_number,
         "insiteDescription": product_number,
@@ -39,44 +40,55 @@ def uniqlo_price_kernel(product_number):
         "rank": "overall",
         "priceRange": {
             "low": 0,
-            "high": 0
-        }
+            "high": 0,
+        },
     }
     r = requests.post(_SEARCH_URL, headers=headers, json=data)
     if r.status_code != 200:
         return None
 
     resp_data = r.json()
-    resp_data = resp_data['resp'][1][0]
-    sex = resp_data['sex']
-    name = resp_data['name']
-    origin_price = int(resp_data['originPrice'])
-    prices = resp_data.get('prices', None)
-    prices = [int(p) for p in prices]
-    product_code = resp_data['productCode']
-    main_picture = resp_data['mainPic']
-    main_picture = f'https://www.uniqlo.com/tw{main_picture}'
-    link = f'https://www.uniqlo.com/tw/zh_TW/product-detail.html?productCode={product_code}'
+    result = []
+    resp_data = resp_data["resp"][1]
+    length = len(resp_data)
 
-    result = {
-        "product_number": product_number,
-        "name": name,
-        "sex": sex,
-        "origin_price": origin_price,
-        "main_picture": main_picture,
-        "link": link,
-    }
-    if isinstance(prices, list):
-        if len(prices) == 1:
-            if origin_price != prices[0]:
-                result["new_prices"] = prices[0]
+    for i, data in enumerate(resp_data):
+        sex = data['sex']
+        name = data['name']
+        origin_price = int(data['originPrice'])
+        prices = data.get('prices', None)
+        prices = [int(p) for p in prices]
+        product_code = data['productCode']
+        main_picture = data['mainPic']
+        main_picture = f'https://www.uniqlo.com/tw{main_picture}'
+        link = f'https://www.uniqlo.com/tw/zh_TW/product-detail.html?productCode={product_code}'
+
+        product_data = {
+            "product_number": product_number,
+            "name": name,
+            "sex": sex,
+            "origin_price": origin_price,
+            "main_picture": main_picture,
+            "link": link,
+        }
+        if length > 1:
+            product_data["product_number"] = f"{product_number} ({i+1})"
         else:
-            prices = ', '.join(str(int(price)) for price in prices)
-            result["new_prices"] = prices
-    elif isinstance(prices, str):
-        result["new_prices"] = prices
-    elif prices is not None:
-        result["new_prices"] = f"{prices} ({type(prices)})"
+            product_data["product_number"] = product_number
+
+        if isinstance(prices, list):
+            if len(prices) == 1:
+                if origin_price != prices[0]:
+                    product_data["new_prices"] = prices[0]
+            else:
+                prices = ', '.join(str(int(price)) for price in prices)
+                product_data["new_prices"] = prices
+        elif isinstance(prices, str):
+            product_data["new_prices"] = prices
+        elif prices is not None:
+            product_data["new_prices"] = f"{prices} ({type(prices)})"
+
+        result.append(product_data)
 
     return result
 
@@ -90,10 +102,11 @@ def uniqlo_price(product_number_list, reply_token):
     content_list = []
     for product_number in product_number_list:
         data = uniqlo_price_kernel(product_number)
-        if "new_prices" in data:
-            content_list.append(_FLEX_CONTENT_PRICE_CHEAP.format(**data))
-        else:
-            content_list.append(_FLEX_CONTENT_PRICE.format(**data))
+        for data_ in data:
+            if "new_prices" in data_:
+                content_list.append(_FLEX_CONTENT_PRICE_CHEAP.format(**data_))
+            else:
+                content_list.append(_FLEX_CONTENT_PRICE.format(**data_))
 
     if not content_list:
         # TODO: 回傳查無資料
