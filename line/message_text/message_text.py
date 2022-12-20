@@ -36,10 +36,13 @@ for func, keys in _FUNCTION_MAPPING_TEMP.items():
         _FUNCTION_MAPPING[key] = func
 
 
-def process_text(message, reply_token):
+def process_text(event):
+    message = event["message"]
+
     text = message["text"]
     text = text.strip()
     text_split = text.split(" ")
+
     func = _FUNCTION_MAPPING.get(text_split[0])
     if func:
-        func(text_split, reply_token)
+        func(text_split, event)

@@ -28,14 +28,13 @@ class MessageHandler:
     }
 
     def __init__(self, event):
-        self.message = event["message"]
-        self.reply_token = event["replyToken"]
+        self.event = event
 
     def process(self):
-        message_type = self.message["type"]
+        message_type = self.event["message"]["type"]
         func = self.FUNCTION_MAPPING.get(message_type)
         if func:
-            func(self.message, self.reply_token)
+            func(self.event)
 
 
 class EventsHandlerThread(threading.Thread):

@@ -14,13 +14,13 @@ def line_message_object_text(text):
 
 
 
-def send_reply_message(reply_token, messages):
+def send_reply_message(event, messages):
     print(messages)
     headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}",
     }
     data = {
-        "replyToken": reply_token,
+        "replyToken": event["replyToken"],
         "messages": messages,
     }
 

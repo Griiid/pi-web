@@ -90,8 +90,8 @@ _FLEX_END = FLEX_END.format(header_background="#FFFED1")
 _FLEX_CONTENT_CURRENCY = '{{"type":"box","layout":"vertical","contents":[{{"type":"text","text":"{currency}","size":"lg","weight":"bold","align":"center","margin":"5px"}},{{"type":"box","layout":"horizontal","paddingStart":"30px","contents":[{{"type":"text","text":" ","flex":2,"size":"lg","weight":"bold","decoration":"none","contents":[]}},{{"type":"text","text":"現金","flex":6}},{{"type":"text","text":"即期","flex":6}}]}},{{"type":"box","layout":"horizontal","paddingStart":"30px","contents":[{{"type":"text","text":"買","flex":2,"color":"#EB4726"}},{{"type":"text","text":"{cash_buy}","flex":6,"color":"#EB4726"}},{{"type":"text","text":"{spot_buy}","flex":6,"color":"#EB4726"}}]}},{{"type":"box","layout":"horizontal","paddingStart":"30px","contents":[{{"type":"text","text":"賣","flex":2,"color":"#43952A"}},{{"type":"text","text":"{cash_sell}","flex":6,"color":"#43952A"}},{{"type":"text","text":"{spot_sell}","flex":6,"color":"#43952A"}}]}}]}}'
 
 
-def exchange_rate(currency_list, reply_token):
-    """匯率 [幣別 1] [幣別 2] ..."""
+def exchange_rate(currency_list, event):
+    """匯率 [幣別 1] [幣別 2] ... (ex: 匯率 美金 日幣)"""
     currency_list = currency_list[1:]
 
     r = requests.get(_URL_EXCHANGE_RATE)
@@ -141,7 +141,7 @@ def exchange_rate(currency_list, reply_token):
     message = json.loads(message)
 
     print_json(message, "message")
-    send_reply_message(reply_token, messages=[message])
+    send_reply_message(event, messages=[message])
 
 
 if __name__ == '__main__':

@@ -5,18 +5,14 @@ from flask import (
 )
 from werkzeug.exceptions import HTTPException
 
+from app import create_app
 from utils import status
 from utils.print import (
     print_error,
     print_traceback,
 )
 
-app = Flask(__name__)
-app.config.from_prefixed_env()
-
-with app.app_context():
-    from line.line import line
-    app.register_blueprint(line)
+app = create_app()
 
 
 @app.errorhandler(Exception)

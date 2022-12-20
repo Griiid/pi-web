@@ -93,8 +93,8 @@ def uniqlo_price_kernel(product_number):
     return result
 
 
-def uniqlo_price(product_number_list, reply_token):
-    """UQ 商品編號 1 [商品編號 2] ..."""
+def uniqlo_price(product_number_list, event):
+    """UQ 商品編號 1 [商品編號 2] ... (ex: UQ 446867 447189)"""
     product_number_list = product_number_list[1:]
     if not product_number_list:
         return
@@ -120,4 +120,4 @@ def uniqlo_price(product_number_list, reply_token):
     message = json.loads(message)
 
     print_json(message, "message")
-    send_reply_message(reply_token, messages=[message])
+    send_reply_message(event, messages=[message])

@@ -16,7 +16,10 @@ msg_dict = {
 }
 
 
-def direct_reply(key, reply_token):
+def direct_reply(key, event):
+    if event["source"]["type"] != "group" or event["source"]["groupId"] != "Cb5810e4c4793881749cac3c6c79d0d40":
+        return
+
     key = key[0]
     choices = msg_dict.get(key, None)
     if not choices:
@@ -24,4 +27,4 @@ def direct_reply(key, reply_token):
 
     text = random.choice(msg_dict[key])
     message = line_message_object_text(text)
-    send_reply_message(reply_token, [message])
+    send_reply_message(event, [message])

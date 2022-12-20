@@ -1,0 +1,49 @@
+body {
+    background:#222;
+}
+
+.content-setting {
+    font-size: 14px;
+    color:#888;
+    background:#222;
+    padding: 10px;
+}
+.content-setting > div {
+    text-indent: -10px;
+}
+
+.to-bottom-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width:30px;
+    height:30px;
+    background: #FFF;
+    opacity: .5;
+    border-radius:100%;
+    border: 4px #FFFFFF88 solid;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    visibility: hidden;
+}
+
+.to-bottom-button .fa, .fas {
+    font-size: 32px;
+}
+
+@media screen and (max-width: 1024px) {
+    .content-setting {
+        font-size: 40px;
+    }
+    .to-bottom-button {
+        bottom: 40px;
+        right: 40px;
+        width: 56px;
+        height: 56px;
+        border-width: 10px;
+    }
+    .to-bottom-button .fa, .fas {
+        font-size: 62px;
+    }
+}
